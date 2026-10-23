@@ -1,13 +1,14 @@
+import { API_URL, API_KEY, COUNTRY_CODE } from './config.js';
+
 const CFG_KEY = 'calling_crm_config';
-const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxLLRDwZ3etoEhiH5uR-Jg1DT_08YDmv_iaIHe79k-gDZICSwzPPyYK_Es-GGzXWfDp8A/exec';
 
 export function getConfig() {
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(CFG_KEY) || '{}'); } catch (e) {}
   return {
-    url: saved.url || import.meta.env.VITE_API_URL || DEFAULT_API_URL,
-    key: saved.key || import.meta.env.VITE_API_KEY || '',
-    cc: saved.cc || '',
+    url: API_URL,
+    key: API_KEY,
+    cc: saved.cc || COUNTRY_CODE,
   };
 }
 

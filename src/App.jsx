@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api } from './api.js';
-import Setup from './Setup.jsx';
 import CustomerModal from './CustomerModal.jsx';
 import CustomerPanel from './CustomerPanel.jsx';
 import { blobToBase64, fmtShort, getConfig, saveConfig, telLink, upsert, waLink } from './utils.js';
 
 export default function App() {
   const [cfg, setCfg] = useState(getConfig());
-  const [showSetup, setShowSetup] = useState(false);
   const [data, setData] = useState({ categories: [], customers: [], calls: [] });
   const [loading, setLoading] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -163,13 +161,6 @@ export default function App() {
   const activeCat = data.categories.find((c) => c.id === cat);
   const heading = cat === 'all' ? 'All customers' : cat === 'none' ? 'Uncategorized' : activeCat?.name || 'Customers';
 
-  const connect = (next) => {
-    saveConfig(next);
-    setCfg(next);
-    setShowSetup(false);
-  };
-
-  if (!cfg.url || !cfg.key) return <Setup cfg={cfg} onSave={connect} />;
 
   return (
     <div className={'app' + (selected ? ' has-panel' : '')}>
@@ -209,8 +200,6 @@ export default function App() {
           <input value={newCat} onChange={(e) => setNewCat(e.target.value)} placeholder="New subtitle, e.g. Housing" aria-label="New subtitle" />
           <button className="btn ghost" disabled={!newCat.trim() || busy}>Add</button>
         </form>
-
-        <button className="link settings" onClick={() => setShowSetup(true)}>Connection settings</button>
       </nav>
 
       <main className="main">
@@ -292,8 +281,6 @@ export default function App() {
           onClose={() => setModal(null)}
         />
       )}
-
-      {showSetup && <Setup cfg={cfg} onSave={connect} onCancel={() => setShowSetup(false)} />}
     </div>
   );
 }
